@@ -33,8 +33,8 @@ def register():
         "Student Surname" : input("Student Surname: "),
         "Age": input("Age: "),
         "School Name" : input("School Name: "),
-        "Year" : input("Year: ")
-        "Telephone Number" : input("Telephone Number: "),
+        "Year" : input("Year: "),
+        "Telephone": input("Telephone: "),
         "Course Name" : input("Course Name: "),
         "Hour left" : 100,
         "Username" : input("Username: "),
