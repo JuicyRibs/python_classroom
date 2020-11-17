@@ -67,6 +67,4 @@ class student:
     print("year: "+ str(self.year))
     print("username: "+ self.userName)
 
-#test student class
-p1=student("name","surname",18,10993,"kmutt", 3, "name" , "pass")
-p1.printInfo();
+
