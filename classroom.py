@@ -46,7 +46,7 @@ def register():
 
 #student class for represent student
 class student:
-  def __init__(self, name, sur, age, Id, school, year, userName, passWord):
+  def __init__(self, name, sur, age, Id, school, year, userName, passWord, timeleft):
     self.name = name
     self.age = age
     self.sur = sur
@@ -56,6 +56,7 @@ class student:
     self.year = year
     self.userName = userName
     self.passWord = passWord
+    self.timeleft = timeleft
     
 
   def printInfo(self):
@@ -66,5 +67,6 @@ class student:
     print("School: "+ self.school)
     print("year: "+ str(self.year))
     print("username: "+ self.userName)
+    print("timeleft: "+str(self.timeleft))
 
 
