@@ -23,7 +23,7 @@ def register():
             for i in range(3):
                 print(".", end=" ")
                 time.sleep(0.5)
-                return null
+                return
         else:
             continue
             
@@ -42,5 +42,6 @@ def register():
         "Courses ID" : input("Courses ID: ").split(sep=",")
     }
 
+    users.append(info)
 
 
