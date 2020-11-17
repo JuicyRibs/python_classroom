@@ -69,4 +69,14 @@ class student:
     print("username: "+ self.userName)
     print("timeleft: "+str(self.timeleft))
 
+#classroom 100 seats
+class classRoom:
+    def __init__(self, seats):
+        self.seats = 100
+    #Seat will decrease when has student reserve 
+
+    def classRoomInfo(self):
+        print(str(self.seats))
+    
+    
 
