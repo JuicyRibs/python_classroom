@@ -44,4 +44,29 @@ def register():
 
     users.append(info)
 
+#student class for represent student
+class student:
+  def __init__(self, name, sur, age, Id, school, year, userName, passWord):
+    self.name = name
+    self.age = age
+    self.sur = sur
+    self.age = age
+    self.Id = Id
+    self.school = school
+    self.year = year
+    self.userName = userName
+    self.passWord = passWord
+    
 
+  def printInfo(self):
+    print("Name: "+ self.name)
+    print("Surname: "+ self.sur)
+    print("Age: "+ str(self.age))
+    print("student ID: "+ str(self.Id))
+    print("School: "+ self.school)
+    print("year: "+ str(self.year))
+    print("username: "+ self.userName)
+
+#test student class
+p1=student("name","surname",18,10993,"kmutt", 3, "name" , "pass")
+p1.printInfo();
