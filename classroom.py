@@ -32,7 +32,6 @@ def register():
         "Student Name" : input("Student Name: "),
         "Student Surname" : input("Student Surname: "),
         "Age": input("Age: "),
-<<<<<<< HEAD
         "School Name" : input("School Name: "),
         "Year" : input("Year: ")
         "Telephone Number" : input("Telephone Number: "),
@@ -40,15 +39,6 @@ def register():
         "Hour left" : 100,
         "Username" : input("Username: "),
         "Password" : input("Password: "),
-=======
-        "School Name" : input("School Name: ")
-        "Year" : input("Year: ")
-        "Telephone Number" : input("Telephone Number: ")
-        "Course Name" : input("Course Name: ")
-        "Hour left" : 100
-        "Username" : input("Username: ")
-        "Password" : input("Password: ")
->>>>>>> main
         "Courses ID" : input("Courses ID: ").split(sep=",")
     }
 
