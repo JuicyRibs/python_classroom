@@ -9,9 +9,13 @@ def programInit():
     for line in userdata:
         info = line.split(sep=",")
         std = student(info[0], info[1], info[2], info[3], info[4], info[5],
-                      info[6], info[7], info[8], info[9], info[10], info[11])
+                      info[6], info[7], info[8], info[9], info[10], info[11], info[12])
         users.append(std)
 
+def programExit():
+    userdata = open("userdata.csv", 'x')
+    for user in users:
+        userdata.write("")
 
 def startMenu():
     programInit()
@@ -88,11 +92,11 @@ def landingPage(user):
 
 
 def bookSeat(user):
-    now = datetime.datetime.now
-    print("\nToday is", now.strftime("%x"), now.strftime("%x"))
-    bookDate = input("Enter date of booking: ")
-    bookMonth = input("Enter month of booking: ")
-    bookYear = input("Enter year of booking: ")
+    now = datetime.datetime.now()
+    print("\nToday is", now.strftime("%x"), now.strftime("%X"))
+    bookDate = int(input("Enter date of booking: "))
+    bookMonth = int(input("Enter month of booking: "))
+    bookYear = int(input("Enter year of booking: "))
     book = datetime.datetime(bookYear, bookMonth, bookDate)
     if (book.day-now.day > 3):
         print("Booking is only available 3 days in advance")
@@ -104,7 +108,7 @@ def bookSeat(user):
         bookTime = input("Enter time of booking (hh:mm): ")
         bookTime = bookTime.split(":")
         bookTime = datetime.datetime(
-            bookDate, bookMonth, bookYear, bookTime[0], bookTime[1])
+            bookDate, bookMonth, bookYear, int(bookTime[0]), int(bookTime[1]))
         if ((book.strftime("%x") == now.strftime("%x")) and bookTime.hour - now.hour < 1):
             print("Booking is only available at least 1 hour in advance")
             return bookSeat(user)
@@ -113,7 +117,7 @@ def bookSeat(user):
             if hours < 1:
                 print("Minimum 1 hour")
             else:
-                seat = input("Enter seat: ")
+                seat = int(input("Enter seat: "))
                 if (seat > 100):
                     print("Invalid seat")
                     return bookSeat(user)
@@ -123,13 +127,16 @@ def bookSeat(user):
 
 
 def confirmBooking(user, bookTime, hours, seat, subject):
-    return
+    setattr(user, 'bookingHistory', (getattr(user, 'bookingHistory')).append(booking(bookTime, hours, seat, subject)))
 
 
 class student:
     bookingHistory = []
 
     def __init__(self, name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID):
+        student(name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID, [])
+
+    def __init__(self, name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID, bookingHistory):
         self.name = name
         self.age = age
         self.surname = surname
@@ -143,6 +150,7 @@ class student:
         self.phone = phone
         self.course = course
         self.courseID = courseID
+        self.bookingHistory = bookingHistory
 
     def printInfo(self):
         print("\n")
