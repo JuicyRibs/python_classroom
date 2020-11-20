@@ -1,13 +1,17 @@
 import time
+import datetime
 
 users = []
 
+
 def programInit():
-    userdata = open("userdata.txt")
+    userdata = open("userdata.csv")
     for line in userdata:
         info = line.split(sep=",")
-        std = student(info[0],info[1],info[2],info[3],info[4],info[5],info[6],info[7],info[8],info[9],info[10],info[11])
+        std = student(info[0], info[1], info[2], info[3], info[4], info[5],
+                      info[6], info[7], info[8], info[9], info[10], info[11])
         users.append(std)
+
 
 def startMenu():
     programInit()
@@ -23,15 +27,11 @@ def startMenu():
 
 
 def register():
-    username = input("Username: ")   
+    username = input("Username: ")
     for user in users:
-        print(getattr(user, 'username'))
         if getattr(user, 'username') == username:
             print("User already exist\nExiting program")
-            for i in range(4):
-                print(".", end=" ")
-                time.sleep(1)
-            exit()
+            return register()
         else:
             continue
     password = input("Password: ")
@@ -46,20 +46,25 @@ def register():
     hour = 100
     courseID = input("Course ID: ")
 
-    newUser = student(name, surname, age, stdid, school, year, phone, course, username, password, hour, courseID)
-    addTo = open("userdata.txt", "a")
-    addTo.write(name+","+surname+","+age+","+stdid+","+school+","+year+","+phone+","+course+","+username+","+password+","+str(hour)+","+courseID+"\n")
+    newUser = student(name, surname, age, stdid, school, year,
+                      phone, course, username, password, hour, courseID)
+    addTo = open("userdata.csv", "a")
+    addTo.write(name+","+surname+","+age+","+stdid+","+school+","+year+"," +
+                phone+","+course+","+username+","+password+","+str(hour)+","+courseID+"\n")
     users.append(newUser)
     addTo.close()
+    time.sleep(1)
+    print("\n", name, surname, "added succesfully!")
     print("Add more user?\n")
     ex = input("1 to add more\n2 to go back to start menu\n")
     if (ex == "1"):
         return register()
     elif (ex == "2"):
         return startMenu()
-    else: exit()
+    else:
+        print("Invalid command\nExiting program")
+        exit()
 
-    
 
 def signIn():
     enterUser = input("Username: ")
@@ -75,11 +80,55 @@ def signIn():
                 return signIn()
         print("User not found")
         return signIn()
-                
+
+
 def landingPage(user):
     user.printInfo()
+    return bookSeat(user)
+
+
+def bookSeat(user):
+    now = datetime.datetime.now
+    print("\nToday is", now.strftime("%x"), now.strftime("%x"))
+    bookDate = input("Enter date of booking: ")
+    bookMonth = input("Enter month of booking: ")
+    bookYear = input("Enter year of booking: ")
+    book = datetime.datetime(bookYear, bookMonth, bookDate)
+    if (book.day-now.day > 3):
+        print("Booking is only available 3 days in advance")
+        return landingPage(user)
+    elif (book.day-now.day < 0):
+        print("Invalid date")
+        return bookSeat(user)
+    else:
+        bookTime = input("Enter time of booking (hh:mm): ")
+        bookTime = bookTime.split(":")
+        bookTime = datetime.datetime(
+            bookDate, bookMonth, bookYear, bookTime[0], bookTime[1])
+        if ((book.strftime("%x") == now.strftime("%x")) and bookTime.hour - now.hour < 1):
+            print("Booking is only available at least 1 hour in advance")
+            return bookSeat(user)
+        else:
+            hours = int(input("How many hours?: "))
+            if hours < 1:
+                print("Minimum 1 hour")
+            else:
+                seat = input("Enter seat: ")
+                if (seat > 100):
+                    print("Invalid seat")
+                    return bookSeat(user)
+                else:
+                    subject = input("Enter subject: ")
+                    return confirmBooking(user, bookTime, hours, seat, subject)
+
+
+def confirmBooking(user, bookTime, hours, seat, subject):
+    return
+
 
 class student:
+    bookingHistory = []
+
     def __init__(self, name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID):
         self.name = name
         self.age = age
@@ -96,8 +145,8 @@ class student:
         self.courseID = courseID
 
     def printInfo(self):
-        print("\n\n")
-        print("Welcome, ",self.name,self.surname)
+        print("\n")
+        print("Welcome, ", self.name, self.surname)
         print("Age: " + str(self.age))
         print("student ID: " + str(self.stdid))
         print("School: " + self.school)
@@ -108,6 +157,14 @@ class student:
 
 # classroom 100 seats
 
+class booking:
+    def __init__(self, bookTime, hours, seat, subject):
+        self.bookTime = bookTime
+        self.hours = hours
+        self.seat = seat
+        self.subject = subject
+    
+        
 
 class classRoom:
     def __init__(self, seats):
@@ -116,5 +173,6 @@ class classRoom:
 
     def classRoomInfo(self):
         print(str(self.seats))
+
 
 startMenu()
