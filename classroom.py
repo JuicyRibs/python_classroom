@@ -33,7 +33,6 @@ def programExit():
         school = getattr(user,"school")
         year = getattr(user,"year")
         phone = getattr(user,"phone")
-        # course = input("Course Name: ")
         hour = getattr(user,"hour")
         courseID = getattr(user,"courseID")
         userdata.write(name+","+surname+","+age+","+stdid+","+school+","+year+"," +
@@ -69,13 +68,12 @@ def register():
     school = input("School Name: ")
     year = input("Year: ")
     phone = input("Telephone: ")
-    # course = input("Course Name: ")
     hour = 100
     courseID = input("Course ID: ")
 
     newUser = student(name, surname, age, stdid, school, year,
                       phone, username, password, hour, courseID)
-
+    users.append(newUser)
     time.sleep(1)
     print("")
     print(name, surname, "added succesfully!")
