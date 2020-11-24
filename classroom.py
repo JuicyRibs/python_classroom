@@ -21,6 +21,25 @@ def programInit():
         bookingList.append(book)
     bookingHistory.close()
 
+def programExit():
+    userdata = open("userdata.csv", 'w')
+    for user in users:
+        username = getattr(user,"username")
+        password = getattr(user,"password")
+        name = getattr(user,"name")
+        surname = getattr(user,"surname")
+        stdid = getattr(user,"stdid")
+        age = getattr(user,"age")
+        school = getattr(user,"school")
+        year = getattr(user,"year")
+        phone = getattr(user,"phone")
+        # course = input("Course Name: ")
+        hour = getattr(user,"hour")
+        courseID = getattr(user,"courseID")
+        userdata.write(name+","+surname+","+age+","+stdid+","+school+","+year+"," +
+                phone+","+username+","+password+","+str(hour)+","+courseID+"\n")
+    return exit()
+
 def startMenu():
     programInit()
     print("Welcome to Classroom!")
@@ -56,11 +75,7 @@ def register():
 
     newUser = student(name, surname, age, stdid, school, year,
                       phone, username, password, hour, courseID)
-    addTo = open("userdata.csv", "a")
-    addTo.write(name+","+surname+","+age+","+stdid+","+school+","+year+"," +
-                phone+","+username+","+password+","+str(hour)+","+courseID+"\n")
-    users.append(newUser)
-    addTo.close()
+
     time.sleep(1)
     print("")
     print(name, surname, "added succesfully!")
@@ -72,7 +87,7 @@ def register():
         return startMenu()
     else:
         print("Invalid command\nExiting program")
-        exit()
+        return programExit()
 
 
 def signIn():
@@ -156,7 +171,7 @@ def confirmBooking(user, bookTime, hours, seat):
     confirm = input("\nConfirm booking? Y/N :")
     if confirm == "N":
         print("Booking canceled.\nExiting program")
-        return exit()
+        return programExit()
     elif confirm == "Y":
         newBook = booking(getattr(user,"username"),bookTime, hours, seat)
         bookingList.append(newBook)
@@ -164,7 +179,7 @@ def confirmBooking(user, bookTime, hours, seat):
         addTo.write(getattr(user,"username")+","+str(bookTime)+","+str(hours)+","+str(seat)+"\n")
         setattr(user,"timeleft",(int(getattr(user,"timeleft"))-int(hours)))
         print("Booking success.\nExiting program.")
-        return exit()
+        return programExit()
 
 
 def addSubject():
@@ -179,7 +194,7 @@ def addSubject():
     else:
         addTo.close()
         print("Exiting program")
-        return exit()
+        return programExit()
 
 
 def changeSubject(user):
@@ -196,9 +211,9 @@ def changeSubject(user):
             setattr(user,"timeLeft",100)
             time.sleep(2)
             print("Exiting program")
-            return exit()
+            return programExit()
     print("Subject not found. Exiting program")
-    return exit()
+    return programExit()
 
 
 
