@@ -2,22 +2,24 @@ import time
 import datetime
 
 users = []
-
+bookingList = []
 
 def programInit():
     userdata = open("userdata.csv")
     for line in userdata:
         info = line.split(sep=",")
-        std = student(info[0], info[1], info[2], info[3], info[4], info[5],     
-                      info[6], info[7], info[8], info[9], info[10], info[11]
-                    #   , info[12]
+        std = student(info[0], info[1], info[2], info[3], info[4], info[5],
+                      info[6], info[7], info[8], info[9], info[10]
                       )
         users.append(std)
+    userdata.close()
 
-def programExit():
-    userdata = open("userdata.csv", 'x')
-    for user in users:
-        userdata.write("")
+    bookingHistory = open("bookingHistory.csv")
+    for line in bookingHistory:
+        info = line.split(sep=",")
+        book = booking(info[0], info[1], info[2], info[3])
+        bookingList.append(book)
+    bookingHistory.close()
 
 def startMenu():
     programInit()
@@ -60,7 +62,8 @@ def register():
     users.append(newUser)
     addTo.close()
     time.sleep(1)
-    print("\n", name, surname, "added succesfully!")
+    print("")
+    print(name, surname, "added succesfully!")
     print("Add more user?\n")
     ex = input("1 to add more\n2 to go back to start menu\n")
     if (ex == "1"):
@@ -84,16 +87,22 @@ def signIn():
             else:
                 print("Invalid password")
                 return signIn()
-        print("User not found")
-        return signIn()
+    print("User not found")
+    return signIn()
 
 
 def landingPage(user):
     user.printInfo()
-    return bookSeat(user)
-
-
-
+    page = input(
+        "\nPlease select...\n3 for Booking seat\n4 for Cancel booking\n5 for adding subject to system\n6 for changing your subject\n")
+    if page == "3": 
+        return bookSeat(user)
+    if page == "4": 
+        return cancelBooking(user)
+    if page == "5": 
+        return addSubject()
+    if page == "6": 
+        return changeSubject(user)
 
 def bookSeat(user):
     now = datetime.datetime.now()
@@ -126,20 +135,74 @@ def bookSeat(user):
                     print("Invalid seat")
                     return bookSeat(user)
                 else:
-                    subject = input("Enter subject: ")
-                    return confirmBooking(user, bookTime, hours, seat, subject)
+                    return confirmBooking(user, bookTime, hours, seat)
+
+def cancelBooking(user):
+    usern = getattr(user,"username")
+    for entry in bookingList:
+        if(getattr(entry,"username") == usern):
+            entry.printInfo()
+            if (input("Cancel this entry? Y/N: ") == "Y"):
+                # Delete line from .csv
+                print("Entry deleted.")
+    print("Booking not found.\nExiting program.")
 
 
-def confirmBooking(user, bookTime, hours, seat, subject):
-    book = book
-    setattr(user, 'bookingHistory', (getattr(user, 'bookingHistory')).append(booking(bookTime, hours, seat, subject)))
+def confirmBooking(user, bookTime, hours, seat):
+    print("\nBooking info")
+    print("Booking start",str(bookTime))
+    print("Booking hour",hours)
+    print("Seat number",seat)
+    confirm = input("\nConfirm booking? Y/N :")
+    if confirm == "N":
+        print("Booking canceled.\nExiting program")
+        return exit()
+    elif confirm == "Y":
+        newBook = booking(getattr(user,"username"),bookTime, hours, seat)
+        bookingList.append(newBook)
+        addTo = open("bookingHistory.csv", "a")
+        addTo.write(getattr(user,"username")+","+str(bookTime)+","+str(hours)+","+str(seat)+"\n")
+        setattr(user,"timeleft",(int(getattr(user,"timeleft"))-int(hours)))
+        print("Booking success.\nExiting program.")
+        return exit()
+
+
+def addSubject():
+    sid = input("Enter subject id: ")
+    name = input("Enter subject name: ")
+    addTo = open("subjectList.csv", "a")
+    addTo.write(sid+","+name+"\n")
+    print(sid,name,"added.\n")
+    more = input("Add more subject? Y/N :")
+    if more=="Y":
+        return addSubject()
+    else:
+        addTo.close()
+        print("Exiting program")
+        return exit()
+
+
+def changeSubject(user):
+    subject = open("subjectList.csv", 'r')
+    sidList = []
+    for s in subject:
+        sid = s.split(",")
+        sidList.append(sid)
+    newSub = input("Enter new subject ID: ")
+    for s in sidList:
+        if newSub == s[0]:
+            setattr(user,"courseID",newSub)
+            print("\nSubject changed to",s[1],"Subject ID",s[0],"\n\nResetting hour to 100...")
+            setattr(user,"timeLeft",100)
+            time.sleep(2)
+            print("Exiting program")
+            return exit()
+    print("Subject not found. Exiting program")
+    return exit()
+
 
 
 class student:
-    bookingHistory = []
-
-    # def __init__(self, name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID):
-    #     student(name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID, [])
 
     def __init__(self, name, surname, age, stdid, school, year, phone, username, password, timeleft, courseID):
         self.name = name
@@ -154,7 +217,6 @@ class student:
         self.timeleft = timeleft
         self.phone = phone
         self.courseID = courseID
-        # self.bookingHistory = bookingHistory
 
     def printInfo(self):
         print("\n")
@@ -167,25 +229,18 @@ class student:
         print("timeleft: "+str(self.timeleft))
         print("Course ID: "+str(self.courseID))
 
-# classroom 100 seats
 
 class booking:
-    def __init__(self, bookTime, hours, seat, subject):
+    def __init__(self, username, bookTime, hours, seat):
+        self.username = username
         self.bookTime = bookTime
         self.hours = hours
         self.seat = seat
-        self.subject = subject
-    
-        
 
-class classRoom:
-    def __init__(self, className, seats):
-        self.seats = 100
-        self.className = className
-    # Seat will decrease when has student reserve
-
-    def classRoomInfo(self):
-        print(str(self.seats))
-
+    def printInfo(self):
+        print("Booking time: ", str(self.bookTime))
+        print("Hours: ",self.hours)
+        print("Seat Number: ",self.seat)
 
 startMenu()
+
