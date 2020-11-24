@@ -1,4 +1,3 @@
-import time
 import datetime
 
 users = []
@@ -73,7 +72,6 @@ def register():
         newUser = student(name, surname, age, stdid, school, year,
                         phone, username, password, hour, courseID)
         users.append(newUser)
-        time.sleep(1)
         print("")
         print(name, surname, "added succesfully!")
         print("Add more user?\n")
@@ -105,7 +103,6 @@ def signIn():
             enterPw = input("Password: ")
             if (enterPw == getattr(user, 'password')):
                 print("Sign in success")
-                time.sleep(1)
                 return landingPage(user)
             else:
                 print("Invalid password")
@@ -232,7 +229,6 @@ def changecourse(user):
             setattr(user,"courseID",newSub)
             print("\nCourse changed to",s[1],"Course ID",s[0],"\n\nResetting hour to 100...")
             setattr(user,"timeLeft",100)
-            time.sleep(2)
             print("Exiting program")
             return programExit()
     print("Course not found. Exiting program")
