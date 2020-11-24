@@ -8,8 +8,10 @@ def programInit():
     userdata = open("userdata.csv")
     for line in userdata:
         info = line.split(sep=",")
-        std = student(info[0], info[1], info[2], info[3], info[4], info[5],
-                      info[6], info[7], info[8], info[9], info[10], info[11], info[12])
+        std = student(info[0], info[1], info[2], info[3], info[4], info[5],     
+                      info[6], info[7], info[8], info[9], info[10], info[11]
+                    #   , info[12]
+                      )
         users.append(std)
 
 def programExit():
@@ -46,15 +48,15 @@ def register():
     school = input("School Name: ")
     year = input("Year: ")
     phone = input("Telephone: ")
-    course = input("Course Name: ")
+    # course = input("Course Name: ")
     hour = 100
     courseID = input("Course ID: ")
 
     newUser = student(name, surname, age, stdid, school, year,
-                      phone, course, username, password, hour, courseID)
+                      phone, username, password, hour, courseID)
     addTo = open("userdata.csv", "a")
     addTo.write(name+","+surname+","+age+","+stdid+","+school+","+year+"," +
-                phone+","+course+","+username+","+password+","+str(hour)+","+courseID+"\n")
+                phone+","+username+","+password+","+str(hour)+","+courseID+"\n")
     users.append(newUser)
     addTo.close()
     time.sleep(1)
@@ -91,9 +93,11 @@ def landingPage(user):
     return bookSeat(user)
 
 
+
+
 def bookSeat(user):
     now = datetime.datetime.now()
-    print("\nToday is", now.strftime("%x"), now.strftime("%X"))
+    print("\nToday is", now.strftime("%d-%m-%Y"), now.strftime("%d-%m-%Y"))
     bookDate = int(input("Enter date of booking: "))
     bookMonth = int(input("Enter month of booking: "))
     bookYear = int(input("Enter year of booking: "))
@@ -108,8 +112,8 @@ def bookSeat(user):
         bookTime = input("Enter time of booking (hh:mm): ")
         bookTime = bookTime.split(":")
         bookTime = datetime.datetime(
-            bookDate, bookMonth, bookYear, int(bookTime[0]), int(bookTime[1]))
-        if ((book.strftime("%x") == now.strftime("%x")) and bookTime.hour - now.hour < 1):
+            bookYear, bookMonth, bookDate, int(bookTime[0]), int(bookTime[1]))
+        if ((book.strftime("%d-%m-%Y") == now.strftime("%d-%m-%Y")) and bookTime.hour - now.hour < 1):
             print("Booking is only available at least 1 hour in advance")
             return bookSeat(user)
         else:
@@ -127,16 +131,17 @@ def bookSeat(user):
 
 
 def confirmBooking(user, bookTime, hours, seat, subject):
+    book = book
     setattr(user, 'bookingHistory', (getattr(user, 'bookingHistory')).append(booking(bookTime, hours, seat, subject)))
 
 
 class student:
     bookingHistory = []
 
-    def __init__(self, name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID):
-        student(name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID, [])
+    # def __init__(self, name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID):
+    #     student(name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID, [])
 
-    def __init__(self, name, surname, age, stdid, school, year, phone, course, username, password, timeleft, courseID, bookingHistory):
+    def __init__(self, name, surname, age, stdid, school, year, phone, username, password, timeleft, courseID):
         self.name = name
         self.age = age
         self.surname = surname
@@ -148,9 +153,8 @@ class student:
         self.password = password
         self.timeleft = timeleft
         self.phone = phone
-        self.course = course
         self.courseID = courseID
-        self.bookingHistory = bookingHistory
+        # self.bookingHistory = bookingHistory
 
     def printInfo(self):
         print("\n")
@@ -175,8 +179,9 @@ class booking:
         
 
 class classRoom:
-    def __init__(self, seats):
+    def __init__(self, className, seats):
         self.seats = 100
+        self.className = className
     # Seat will decrease when has student reserve
 
     def classRoomInfo(self):
