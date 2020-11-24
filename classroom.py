@@ -8,8 +8,8 @@ def programInit():
     userdata = open("userdata.csv")
     for line in userdata:
         info = line.split(sep=",")
-        std = student(info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9], info[10]
-                      )
+        print(info)
+        std = student(info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9], info[10])
         users.append(std)
     userdata.close()
 
@@ -35,7 +35,7 @@ def programExit():
         hour = getattr(user,"timeleft")
         courseID = getattr(user,"courseID")
         userdata.write(name+","+surname+","+age+","+stdid+","+school+","+year+"," +
-                phone+","+username+","+password+","+str(hour)+","+courseID+"\n")
+                phone+","+username+","+password+","+str(hour)+","+courseID)
     return exit()
 
 def startMenu():
