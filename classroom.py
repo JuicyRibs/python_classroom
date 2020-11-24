@@ -156,9 +156,13 @@ def cancelBooking(user):
         if(getattr(entry,"username") == usern):
             entry.printInfo()
             if (input("Cancel this entry? Y/N: ") == "Y"):
-                # Delete line from .csv
+                # Delete line from .csv 
+                # try overwrite to .csv for delete       
+                DelAdd = open("bookingHistory.csv","w")
+                DelAdd.write("")
                 print("Entry deleted.")
     print("Booking not found.\nExiting program.")
+    return programExit()
 
 
 def confirmBooking(user, bookTime, hours, seat):
