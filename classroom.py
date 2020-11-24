@@ -157,7 +157,7 @@ def cancelBooking(user):
             entry.printInfo()
             if (input("Cancel this entry? Y/N: ") == "Y"):
                 # Delete line from .csv 
-                # try overwrite to .csv for delete       
+                # try overwrite not thing to .csv for delete       
                 DelAdd = open("bookingHistory.csv","w")
                 DelAdd.write("")
                 print("Entry deleted.")
