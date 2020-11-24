@@ -69,23 +69,34 @@ def register():
     phone = input("Telephone: ")
     hour = 100
     courseID = input("Course ID: ")
-
-    newUser = student(name, surname, age, stdid, school, year,
-                      phone, username, password, hour, courseID)
-    users.append(newUser)
-    time.sleep(1)
-    print("")
-    print(name, surname, "added succesfully!")
-    print("Add more user?\n")
-    ex = input("1 to add more\n2 to go back to start menu\n")
-    if (ex == "1"):
-        return register()
-    elif (ex == "2"):
-        return startMenu()
+    if (checkCourse(courseID)):
+        newUser = student(name, surname, age, stdid, school, year,
+                        phone, username, password, hour, courseID)
+        users.append(newUser)
+        time.sleep(1)
+        print("")
+        print(name, surname, "added succesfully!")
+        print("Add more user?\n")
+        ex = input("1 to add more\n2 to go back to start menu\n")
+        if (ex == "1"):
+            return register()
+        elif (ex == "2"):
+            return startMenu()
+        else:
+            print("Invalid command\nExiting program")
+            return programExit()
     else:
-        print("Invalid command\nExiting program")
-        return programExit()
+        print("Invalid course ID\nExiting program")
+        return exit()
 
+def checkCourse(courseID):
+    idList = []
+    courses = open("courseList",'r')
+    for course in courses:
+        idList.append((course.split(","))[1])
+    if (courseID not in idList):
+        return False
+    return True
 
 def signIn():
     enterUser = input("Username: ")
@@ -106,15 +117,15 @@ def signIn():
 def landingPage(user):
     user.printInfo()
     page = input(
-        "\nPlease select...\n3 for Booking seat\n4 for Cancel booking\n5 for adding subject to system\n6 for changing your subject\n")
+        "\nPlease select...\n3 for Booking seat\n4 for Cancel booking\n5 for adding course to system\n6 for changing your course\n")
     if page == "3": 
         return bookSeat(user)
     if page == "4": 
         return cancelBooking(user)
     if page == "5": 
-        return addSubject()
+        return addcourse()
     if page == "6": 
-        return changeSubject(user)
+        return changecourse(user)
 
 def bookSeat(user):
     now = datetime.datetime.now()
@@ -191,37 +202,40 @@ def confirmBooking(user, bookTime, hours, seat):
         return programExit()
 
 
-def addSubject():
-    sid = input("Enter subject id: ")
-    name = input("Enter subject name: ")
-    addTo = open("subjectList.csv", "a")
-    addTo.write(sid+","+name+"\n")
-    print(sid,name,"added.\n")
-    more = input("Add more subject? Y/N :")
-    if more=="Y":
-        return addSubject()
-    else:
+def addcourse():
+    sid = input("Enter course id: ")
+    if (not checkCourse(sid)):
+        name = input("Enter course name: ")
+        addTo = open("courseList.csv", "a")
+        addTo.write(sid+","+name+"\n")
+        print(sid,name,"added.\n")
         addTo.close()
-        print("Exiting program")
-        return programExit()
+        more = input("Add more course? Y/N :")
+        if more=="Y":
+            return addcourse()
+        else:
+            print("Exiting program")
+            return programExit()
+    else:
+        print("Course ID already exists\n")
 
 
-def changeSubject(user):
-    subject = open("subjectList.csv", 'r')
+def changecourse(user):
+    course = open("courseList.csv", 'r')
     sidList = []
-    for s in subject:
+    for s in course:
         sid = s.split(",")
         sidList.append(sid)
-    newSub = input("Enter new subject ID: ")
+    newSub = input("Enter new course ID: ")
     for s in sidList:
         if newSub == s[0]:
             setattr(user,"courseID",newSub)
-            print("\nSubject changed to",s[1],"Subject ID",s[0],"\n\nResetting hour to 100...")
+            print("\nCourse changed to",s[1],"Course ID",s[0],"\n\nResetting hour to 100...")
             setattr(user,"timeLeft",100)
             time.sleep(2)
             print("Exiting program")
             return programExit()
-    print("Subject not found. Exiting program")
+    print("Course not found. Exiting program")
     return programExit()
 
 
