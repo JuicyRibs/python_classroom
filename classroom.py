@@ -91,7 +91,7 @@ def register():
 
 def checkCourse(courseID):
     idList = []
-    courses = open("courseList",'r')
+    courses = open("courseList.csv",'r')
     for course in courses:
         idList.append((course.split(","))[1])
     if (courseID not in idList):
@@ -206,7 +206,7 @@ def addcourse():
     sid = input("Enter course id: ")
     if (not checkCourse(sid)):
         name = input("Enter course name: ")
-        addTo = open("courseList.csv", "a")
+        addTo = open("courseList.csv.csv", "a")
         addTo.write(sid+","+name+"\n")
         print(sid,name,"added.\n")
         addTo.close()
@@ -221,7 +221,7 @@ def addcourse():
 
 
 def changecourse(user):
-    course = open("courseList.csv", 'r')
+    course = open("courseList.csv.csv", 'r')
     sidList = []
     for s in course:
         sid = s.split(",")
