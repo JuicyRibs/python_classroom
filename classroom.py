@@ -8,8 +8,7 @@ def programInit():
     userdata = open("userdata.csv")
     for line in userdata:
         info = line.split(sep=",")
-        std = student(info[0], info[1], info[2], info[3], info[4], info[5],
-                      info[6], info[7], info[8], info[9], info[10]
+        std = student(info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9], info[10]
                       )
         users.append(std)
     userdata.close()
@@ -33,7 +32,7 @@ def programExit():
         school = getattr(user,"school")
         year = getattr(user,"year")
         phone = getattr(user,"phone")
-        hour = getattr(user,"hour")
+        hour = getattr(user,"timeleft")
         courseID = getattr(user,"courseID")
         userdata.write(name+","+surname+","+age+","+stdid+","+school+","+year+"," +
                 phone+","+username+","+password+","+str(hour)+","+courseID+"\n")
@@ -151,16 +150,24 @@ def bookSeat(user):
                     return confirmBooking(user, bookTime, hours, seat)
 
 def cancelBooking(user):
+    deleteEntry = []
     usern = getattr(user,"username")
     for entry in bookingList:
         if(getattr(entry,"username") == usern):
             entry.printInfo()
             if (input("Cancel this entry? Y/N: ") == "Y"):
-                # Delete line from .csv 
-                # try overwrite not thing to .csv for delete       
-                DelAdd = open("bookingHistory.csv","w")
-                DelAdd.write("")
-                print("Entry deleted.")
+                tUser = getattr(entry,"username")
+                tStartTime = getattr(entry,"bookTime")
+                tHour = getattr(entry,"hour")
+                tSeat = getattr(entry,"seat")
+                temp = (tUser+","+tStartTime+","+tHour+","+tSeat)
+                deleteEntry.append(temp)
+    with open("bookingHistory.csv", 'r') as f:
+        lines = f.readlines()
+    with open("bookingHistory.csv", 'w') as f:
+        for line in lines:
+            if line not in deleteEntry:
+                f.write(line)
     print("Booking not found.\nExiting program.")
     return programExit()
 
@@ -237,7 +244,7 @@ class student:
 
     def printInfo(self):
         print("\n")
-        print("Welcome, ", self.name, self.surname)
+        print("Welcome,", self.name, self.surname)
         print("Age: " + str(self.age))
         print("student ID: " + str(self.stdid))
         print("School: " + self.school)
