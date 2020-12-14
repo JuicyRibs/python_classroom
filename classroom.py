@@ -1,16 +1,17 @@
 import datetime
+import os
 
 users = []
 bookingList = []
 
 def programInit():
-    userdata = open("userdata.csv")
-    for line in userdata:
-        info = line.split(sep=",")
-        print(info)
-        std = student(info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9], info[10])
-        users.append(std)
-    userdata.close()
+    with open("userdata.csv") as userdata:
+        for line in userdata:
+            info = line.split(sep=",")
+            print(info)
+            if (len(info) > 1):
+                std = student(info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9], info[10])
+                users.append(std)
 
     bookingHistory = open("bookingHistory.csv")
     for line in bookingHistory:
@@ -20,21 +21,24 @@ def programInit():
     bookingHistory.close()
 
 def programExit():
-    userdata = open("userdata.csv", 'w')
-    for user in users:
-        username = getattr(user,"username")
-        password = getattr(user,"password")
-        name = getattr(user,"name")
-        surname = getattr(user,"surname")
-        stdid = getattr(user,"stdid")
-        age = getattr(user,"age")
-        school = getattr(user,"school")
-        year = getattr(user,"year")
-        phone = getattr(user,"phone")
-        hour = getattr(user,"timeleft")
-        courseID = getattr(user,"courseID")
-        userdata.write(name+","+surname+","+age+","+stdid+","+school+","+year+"," +
-                phone+","+username+","+password+","+str(hour)+","+courseID)
+    if os.path.exists("userdata.csv"):
+        os.remove("userdata.csv")
+    with open("userdata.csv", 'w') as userdata:
+        for user in users:
+            username = getattr(user,"username")
+            password = getattr(user,"password")
+            name = getattr(user,"name")
+            surname = getattr(user,"surname")
+            stdid = getattr(user,"stdid")
+            age = getattr(user,"age")
+            school = getattr(user,"school")
+            year = getattr(user,"year")
+            phone = getattr(user,"phone")
+            hour = getattr(user,"timeleft")
+            courseID = getattr(user,"courseID")
+            newUser = name+","+surname+","+age+","+stdid+","+school+","+year+"," + phone +","+username+","+password+","+str(hour)+","+courseID
+            print(newUser)
+            userdata.write(newUser+'\n')
     return exit()
 
 def startMenu():
@@ -91,7 +95,7 @@ def checkCourse(courseID):
     idList = []
     courses = open("courseList.csv",'r')
     for course in courses:
-        idList.append((course.split(","))[1])
+        idList.append((course.split(","))[0])
     if (courseID not in idList):
         return False
     return True
@@ -166,9 +170,10 @@ def cancelBooking(user):
             if (input("Cancel this entry? Y/N: ") == "Y"):
                 tUser = getattr(entry,"username")
                 tStartTime = getattr(entry,"bookTime")
-                tHour = getattr(entry,"hour")
+                tHour = getattr(entry,"hours")
                 tSeat = getattr(entry,"seat")
                 temp = (tUser+","+tStartTime+","+tHour+","+tSeat)
+                setattr(user,"timeleft", getattr(user,"timeleft")+int(tHour))
                 deleteEntry.append(temp)
     with open("bookingHistory.csv", 'r') as f:
         lines = f.readlines()
