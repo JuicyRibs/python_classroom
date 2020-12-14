@@ -8,23 +8,27 @@ def programInit():
     with open("userdata.csv") as userdata:
         for line in userdata:
             info = line.split(sep=",")
-            print(info)
+            # print(info)
             if (len(info) > 1):
                 std = student(info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9], info[10])
                 users.append(std)
-
+    print(users)
+    print(len(users))
     bookingHistory = open("bookingHistory.csv")
     for line in bookingHistory:
         info = line.split(sep=",")
         book = booking(info[0], info[1], info[2], info[3])
         bookingList.append(book)
     bookingHistory.close()
+    return startMenu()
 
 def programExit():
+    print(users)
     if os.path.exists("userdata.csv"):
         os.remove("userdata.csv")
     with open("userdata.csv", 'w') as userdata:
-        for user in users:
+        for i in range(0,len(users)):
+            user = users[i]
             username = getattr(user,"username")
             password = getattr(user,"password")
             name = getattr(user,"name")
@@ -38,11 +42,11 @@ def programExit():
             courseID = getattr(user,"courseID")
             newUser = name+","+surname+","+age+","+stdid+","+school+","+year+"," + phone +","+username+","+password+","+str(hour)+","+courseID
             print(newUser)
-            userdata.write(newUser+'\n')
+            userdata.write(newUser)
+    users.clear()
     return exit()
 
 def startMenu():
-    programInit()
     print("Welcome to Classroom!")
     start = input("Please input...\n0 for register\n1 for sign in\n")
     if (start == "0"):
@@ -76,6 +80,7 @@ def register():
         newUser = student(name, surname, age, stdid, school, year,
                         phone, username, password, hour, courseID)
         users.append(newUser)
+        print(users,len(users),sep="\n")
         print("")
         print(name, surname, "added succesfully!")
         print("Add more user?\n")
@@ -89,7 +94,7 @@ def register():
             return programExit()
     else:
         print("Invalid course ID\nExiting program")
-        return exit()
+        return programExit()
 
 def checkCourse(courseID):
     idList = []
@@ -281,5 +286,5 @@ class booking:
         print("Hours: ",self.hours)
         print("Seat Number: ",self.seat)
 
-startMenu()
+programInit()
 
